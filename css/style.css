@@ -1,0 +1,57 @@
+/* Box Model Hack */
+/* * {
+  box-sizing: border-box;
+} */
+
+/* Clear fix hack */
+.clearfix:after {
+     content: ".";
+     display: block;
+     clear: both;
+     visibility: hidden;
+     line-height: 0;
+     height: 0;
+}
+
+.clear {
+	clear: both;
+}
+
+/******************************************
+/* BASE STYLES
+/*******************************************/
+
+body {
+  background-color: rgb(190, 8, 245);
+  text-align: center;
+}
+
+#game-container {
+  width: 50vw;
+  height: 50vw;
+  margin: 1vw auto;
+  background-color: black;
+  border: solid 10px rgb(1, 121, 241);
+  border-radius: 10px;
+  box-shadow: 0px 0px 20px 3px black;
+}
+
+.game-board-pixel {
+  width: 10vw;
+  height: 10vw;
+  border-radius: 5px;
+  float: left;
+  outline: 1px solid red;
+}
+
+.tim {
+  background-color: whitesmoke;
+}
+
+.target {
+  background-color: goldenrod;
+}
+
+.obstacle {
+  background-color: rgb(86, 3, 3)
+}
