@@ -44,14 +44,18 @@ body {
   outline: 1px solid red;
 }
 
-.tim {
+div.tim {
   background-color: whitesmoke;
 }
 
-.target {
+div.target {
   background-color: goldenrod;
 }
 
 .obstacle {
   background-color: rgb(86, 3, 3)
 }
+
+/* .valid {
+  background-color: aquamarine;
+} */

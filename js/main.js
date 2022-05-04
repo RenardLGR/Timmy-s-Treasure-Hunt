@@ -87,7 +87,7 @@ function generate2T() {
 
 //Generate obstacles
 function generateObstacles() {
-    let maxObst = 9
+    let maxObst = 10
     let numObst = 0
 
     while(numObst < maxObst) {
@@ -99,3 +99,105 @@ function generateObstacles() {
         }
     }
 }
+
+
+
+//BRAINY PART
+//===========================================================================
+
+function hasMazeSolution(){
+    //check if the maze with this tim and target and these obstacles has indeed a solution
+
+
+    //STEP 1 check timmy's pos
+    //STEP 2 all pixels (not obstacles) around timmy will trigger a valid pos, all pixels (not obstacles) around valid pos will trigger a valid pos, and so on...
+    //STEP 3 check if target pos is a valid pos
+
+    let timmy
+    //setting up timmy's coord
+    for(let i=0 ; i<gameBoardPixels.length ; i++) {
+        if(gameBoardPixels[i].classList.contains('tim')) {
+            gameBoardPixels[i].classList.add('valid')
+            timmy=i
+        }
+    }
+
+
+
+    //checks all valid position
+    let done=false
+    while(!done) {
+
+        done=true
+
+        for (let i=0 ; i<gameBoardPixels.length ; i++) {
+            //A valid pixel will set each of his neighbors (not obstacles) to a valid state
+            //This algorithm is repeated while done is false wich is set to true if no action have been done (all potential valid pos are validated)
+
+            if(gameBoardPixels[i].classList.contains('valid')) {
+
+                //setting up values to make sure they are accessible in the array
+                let up
+                i-LINE_PIXEL_COUNT>=0 ? up= i-LINE_PIXEL_COUNT : up=timmy
+
+                let right
+                i+1<=LINE_PIXEL_COUNT**2 ? right=i+1 : right=timmy
+
+
+                let down
+                i + LINE_PIXEL_COUNT<=LINE_PIXEL_COUNT**2  ? down=i + LINE_PIXEL_COUNT : down=timmy
+
+                let left
+                i-1>=0 ?  left=i-1 : left=timmy
+        
+        
+                if(up>=0 && !gameBoardPixels[up].classList.contains('obstacle') && !gameBoardPixels[up].classList.contains('valid')) {
+                    //check if coord is valid and if it is not an obstacle
+                    gameBoardPixels[up].classList.add('valid')
+                    done=false
+                }
+                
+                if(right%LINE_PIXEL_COUNT!==0 && !gameBoardPixels[right].classList.contains('obstacle') && !gameBoardPixels[right].classList.contains('valid')) {
+                    
+                    gameBoardPixels[right].classList.add('valid')
+                    done=false
+                }
+        
+                if(down<=LINE_PIXEL_COUNT**2-1 && !gameBoardPixels[down].classList.contains('obstacle') && !gameBoardPixels[down].classList.contains('valid')) {
+                
+                    gameBoardPixels[down].classList.add('valid')
+                    done=false
+                }
+        
+                if(left%LINE_PIXEL_COUNT!==LINE_PIXEL_COUNT-1 && !gameBoardPixels[left].classList.contains('obstacle') && !gameBoardPixels[left].classList.contains('valid')) {
+                
+                    gameBoardPixels[left].classList.add('valid')
+                    done=false
+                }
+            }
+        }
+    }
+
+
+
+    //check if target pos is a valid pos
+    let result=false
+    for(let i=0 ; i<gameBoardPixels.length ; i++) {
+        if(gameBoardPixels[i].classList.contains('target') && gameBoardPixels[i].classList.contains('valid')) {
+            result=true
+        }
+    }
+    return result
+
+    
+    
+}
+
+if(hasMazeSolution()) {
+    console.log('It has a solution!');
+}else {
+    console.log('No solution');
+}
+
+
+
