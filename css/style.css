@@ -59,3 +59,7 @@ div.target {
 /* .valid {
   background-color: aquamarine;
 } */
+
+.clicked {
+  background-color: green;
+}

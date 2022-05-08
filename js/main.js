@@ -10,8 +10,6 @@ const TOTAL_PIXEL_COUNT = LINE_PIXEL_COUNT**2
 const gameContainer = document.getElementById('game-container')
 
 
-createGameBoardPixels()
-
 
 const gameBoardPixels = document.getElementsByClassName("game-board-pixel")
 //Array-like collection of all pixels with indexes like so :
@@ -20,15 +18,26 @@ const gameBoardPixels = document.getElementsByClassName("game-board-pixel")
 // ...
 // 20 21 22 23 24
 
-generate2T()
-generateObstacles()
+
+initializeEnv()
 
 
 //GENERATING ENVIRONMENT FUNCTIONS
 //=======================================================================
 
+//Generate what we see
+function initializeEnv() {
+    do {
+        createGameBoardPixels()
+        
+        generate2T()
+        generateObstacles()
+    } while (!hasMazeSolution());
+}
+
 //Generate the game board
 function createGameBoardPixels() {
+    gameContainer.innerHTML = ''
     for(let i=0 ; i< TOTAL_PIXEL_COUNT ;i++) {
         gameContainer.innerHTML = `${gameContainer.innerHTML} <div class="game-board-pixel" id="pixel${i}"></div>`
     }
@@ -118,6 +127,7 @@ function hasMazeSolution(){
     for(let i=0 ; i<gameBoardPixels.length ; i++) {
         if(gameBoardPixels[i].classList.contains('tim')) {
             gameBoardPixels[i].classList.add('valid')
+            gameBoardPixels[i].classList.add('clicked')
             timmy=i
         }
     }
@@ -137,6 +147,8 @@ function hasMazeSolution(){
             if(gameBoardPixels[i].classList.contains('valid')) {
 
                 //setting up values to make sure they are accessible in the array
+                //setting to timmy if coord unaccessible bcs I gotta to set it to something right?
+                //it worked like that si I didnt change, but I found later that gameBoardPixels[up]?.classList  works just fine
                 let up
                 i-LINE_PIXEL_COUNT>=0 ? up= i-LINE_PIXEL_COUNT : up=timmy
 
@@ -179,7 +191,6 @@ function hasMazeSolution(){
     }
 
 
-
     //check if target pos is a valid pos
     let result=false
     for(let i=0 ; i<gameBoardPixels.length ; i++) {
@@ -187,17 +198,57 @@ function hasMazeSolution(){
             result=true
         }
     }
-    return result
-
-    
+    return result 
     
 }
 
-if(hasMazeSolution()) {
-    console.log('It has a solution!');
-}else {
-    console.log('No solution');
+
+//=============================================================================
+//INTERACTION FUNCTIONS
+let button = document.getElementById('check-answer').addEventListener('click', checkAnswer)
+
+for(let pixel of gameBoardPixels) {
+    pixel.addEventListener('click', onClick)
 }
 
+function checkAnswer() {
+    for(let px of gameBoardPixels) {
+        if(px.classList.contains('target')) {
+            if (px.classList.contains('clicked')) {
+                console.log('Congrats !');
+            }else {
+                console.log('Not won yet!');
+            }
+        }
+    }
+}
+
+function onClick(event) {
+    let pixel = event.currentTarget //div element
+    let i = +pixel.id.slice(5) //get coord of pixel
+    
+    if(pixel.classList.contains('valid')) {
+        let up
+        i-LINE_PIXEL_COUNT>=0 ? up= i-LINE_PIXEL_COUNT : up=null
+
+        let right
+        i+1<=LINE_PIXEL_COUNT**2 ? right=i+1 : right=null
 
 
+        let down
+        i + LINE_PIXEL_COUNT<=LINE_PIXEL_COUNT**2  ? down=i + LINE_PIXEL_COUNT : down=null
+
+        let left
+        i-1>=0 ?  left=i-1 : left=null
+        console.log(i, up, right, down, left);
+        //check if any neighbour has a clicked pixel (timmy is clicked by default); if so set pixel to clicked
+        if(gameBoardPixels[up]?.classList.contains('clicked') || gameBoardPixels[right]?.classList.contains('clicked') || gameBoardPixels[down]?.classList.contains('clicked') || gameBoardPixels[left]?.classList.contains('clicked')) {
+            pixel.classList.add('clicked')
+        }
+        checkAnswer()
+
+    }else {
+        console.log('obstacle clicked!');
+    }
+    
+}
