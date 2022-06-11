@@ -26,6 +26,14 @@ body {
   text-align: center;
 }
 
+#cache {
+  margin: 0 auto;
+  width: 80vw;
+  height: 80vw;
+  position: fixed;
+  /* border: 3px solid red; */
+}
+
 #game-container {
   width: 40vw;
   height: 40vw;

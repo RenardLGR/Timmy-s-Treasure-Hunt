@@ -40,6 +40,7 @@ startGame()
 function startGame() {
     initializeEnv()
     allBlack()
+    removeUnclickableCache()
 
     document.getElementById('highestStreak').innerHTML = highestStreak
     document.getElementById('currentStreak').innerHTML = currentStreak
@@ -157,6 +158,12 @@ function allBlack(){
             }
 
         }, TIMEOUT)
+}
+
+function removeUnclickableCache() {
+    setTimeout(() => {
+        document.getElementById('cache').remove()
+    }, TIMEOUT)
 }
 
 
