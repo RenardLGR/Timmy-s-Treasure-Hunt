@@ -1,6 +1,6 @@
 # Timmy-s-Treasure-Hunt
 
-Link: https://renardlgr.github.io/Timmy-s-Treasure-Hunt/
+Play here: https://renardlgr.github.io/Timmy-s-Treasure-Hunt/
 
 # How to play?
 Timmy (in white) came across a treasure map that self-destructs after a short time. Help Timmy get to the treasure (in yellow) but don't bump into any obstacles!
