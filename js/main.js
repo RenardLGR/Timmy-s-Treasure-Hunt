@@ -1,5 +1,7 @@
 const hi='HELLO'
 
+const TIMEOUT = 1500
+
 //Declare global variables to track game board size
 const LINE_PIXEL_COUNT = 5
 const TOTAL_PIXEL_COUNT = LINE_PIXEL_COUNT**2
@@ -19,8 +21,35 @@ const gameBoardPixels = document.getElementsByClassName("game-board-pixel")
 // 20 21 22 23 24
 
 
-initializeEnv()
+if(!localStorage.getItem('timmyHighestStreak')) {
+    localStorage.setItem('timmyHighestStreak', 0);
+}
+if(!localStorage.getItem('timmyCurrentStreak')) {
+    localStorage.setItem('timmyCurrentStreak', 0);
+}
 
+
+let currentStreak = Number(localStorage.getItem('timmyCurrentStreak'))
+let highestStreak = Number(localStorage.getItem('timmyHighestStreak'))
+
+startGame()
+
+
+
+//START THE GAME
+function startGame() {
+    initializeEnv()
+    allBlack()
+
+    document.getElementById('highestStreak').innerHTML = highestStreak
+    document.getElementById('currentStreak').innerHTML = currentStreak
+}
+
+//REPLAY GAME
+function replayGame() {
+    //It is just a F5
+    location.reload()
+}
 
 //GENERATING ENVIRONMENT FUNCTIONS
 //=======================================================================
@@ -110,6 +139,26 @@ function generateObstacles() {
 }
 
 
+function allBlack(){
+        setTimeout( () => {
+            for (let index = 0; index < gameBoardPixels.length; index++) {
+                gameBoardPixels[index].classList.add('blacked-out')
+                
+            }
+    
+            for(let i=0 ; i<gameBoardPixels.length ; i++){
+                //tim & target should be visible
+                if(gameBoardPixels[i].classList.contains('tim')) {
+                    gameBoardPixels[i].classList.remove('blacked-out')
+                }
+                if(gameBoardPixels[i].classList.contains('target')) {
+                    gameBoardPixels[i].classList.remove('blacked-out')
+                }
+            }
+
+        }, TIMEOUT)
+}
+
 
 //BRAINY PART
 //===========================================================================
@@ -134,7 +183,7 @@ function hasMazeSolution(){
 
 
 
-    //checks all valid position
+    //checks all valid positions
     let done=false
     while(!done) {
 
@@ -148,7 +197,7 @@ function hasMazeSolution(){
 
                 //setting up values to make sure they are accessible in the array
                 //setting to timmy if coord unaccessible bcs I gotta to set it to something right?
-                //it worked like that si I didnt change, but I found later that gameBoardPixels[up]?.classList  works just fine
+                //it worked like that so I didnt change, but I found later that gameBoardPixels[up]?.classList  works just fine
                 let up
                 i-LINE_PIXEL_COUNT>=0 ? up= i-LINE_PIXEL_COUNT : up=timmy
 
@@ -205,7 +254,7 @@ function hasMazeSolution(){
 
 //=============================================================================
 //INTERACTION FUNCTIONS
-let button = document.getElementById('check-answer').addEventListener('click', checkAnswer)
+// let button = document.getElementById('check-answer').addEventListener('click', checkAnswer)
 
 for(let pixel of gameBoardPixels) {
     pixel.addEventListener('click', onClick)
@@ -215,15 +264,28 @@ function checkAnswer() {
     for(let px of gameBoardPixels) {
         if(px.classList.contains('target')) {
             if (px.classList.contains('clicked')) {
-                console.log('Congrats !');
+                //console.log('Congrats !');
+                currentStreak++
+                localStorage.setItem('timmyCurrentStreak', currentStreak);
+
+                if (currentStreak>highestStreak) {
+                    highestStreak=currentStreak
+
+                    localStorage.setItem('timmyHighestStreak', currentStreak);
+                    localStorage.setItem('timmyCurrentStreak', currentStreak);
+                    
+                }
+                alert('You won !')
+                replayGame()
             }else {
-                console.log('Not won yet!');
+                //console.log('Not won yet!');
             }
         }
     }
 }
 
 function onClick(event) {
+    //function click on pixel, checks validty if so turns green, if obstacle the game is lost
     let pixel = event.currentTarget //div element
     let i = +pixel.id.slice(5) //get coord of pixel
     
@@ -240,15 +302,25 @@ function onClick(event) {
 
         let left
         i-1>=0 ?  left=i-1 : left=null
-        console.log(i, up, right, down, left);
+        //console.log(i, up, right, down, left);
+
         //check if any neighbour has a clicked pixel (timmy is clicked by default); if so set pixel to clicked
         if(gameBoardPixels[up]?.classList.contains('clicked') || gameBoardPixels[right]?.classList.contains('clicked') || gameBoardPixels[down]?.classList.contains('clicked') || gameBoardPixels[left]?.classList.contains('clicked')) {
             pixel.classList.add('clicked')
+            pixel.classList.remove('blacked-out')
         }
         checkAnswer()
 
     }else {
-        console.log('obstacle clicked!');
+        if(pixel.classList.contains('obstacle')){
+
+            currentStreak=0
+            localStorage.setItem('timmyCurrentStreak', currentStreak);
+
+            alert('You lost !')
+            replayGame()
+        }
+        //else is the case where there is no obstacle but the case is not reachable
     }
     
 }
