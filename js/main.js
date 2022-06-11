@@ -1,10 +1,14 @@
 const hi='HELLO'
 
+
+//In ms, how much you have to remember the path
 const TIMEOUT = 1500
 
 //Declare global variables to track game board size
-const LINE_PIXEL_COUNT = 5
+//CSS game-board and game-pixel sizes would need a change in order to have a good display
+const LINE_PIXEL_COUNT = 7
 const TOTAL_PIXEL_COUNT = LINE_PIXEL_COUNT**2
+const MAX_OBSTACLE = 19
 
 
 
@@ -19,6 +23,7 @@ const gameBoardPixels = document.getElementsByClassName("game-board-pixel")
 // 5 6 7 8 9
 // ...
 // 20 21 22 23 24
+//for a 5x5 board
 
 
 if(!localStorage.getItem('timmyHighestStreak')) {
@@ -126,13 +131,14 @@ function generate2T() {
 
 //Generate obstacles
 function generateObstacles() {
-    let maxObst = 10
+    let maxObst = MAX_OBSTACLE
     let numObst = 0
 
     while(numObst < maxObst) {
         let rand = Math.floor(Math.random()*LINE_PIXEL_COUNT*LINE_PIXEL_COUNT)
 
-        if( !(gameBoardPixels[rand].classList.contains('tim') ||gameBoardPixels[rand].classList.contains('target')) ){
+        if( !(gameBoardPixels[rand].classList.contains('tim') || gameBoardPixels[rand].classList.contains('target')) ){
+            //It could add an obstacle on an already existing obstacle
             gameBoardPixels[rand].classList.add('obstacle')
             numObst++
         }
