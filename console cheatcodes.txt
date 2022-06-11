@@ -1,0 +1,7 @@
+//Reveal map
+    [...document.querySelectorAll('.game-board-pixel')].forEach(el => el.classList.remove('blacked-out'))
+
+
+//Set Highest streak
+//Replace <SCORE> with the number of your choice
+    localStorage.setItem('timmyHighestStreak', <SCORE>)
