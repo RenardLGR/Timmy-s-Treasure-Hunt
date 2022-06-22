@@ -1,7 +1,7 @@
 const hi='HELLO'
 
 
-//In ms, how much you have to remember the path
+//In ms, how much time you have to remember the path
 const TIMEOUT = 1500
 
 //Declare global variables to track game board size
@@ -26,6 +26,7 @@ const gameBoardPixels = document.getElementsByClassName("game-board-pixel")
 //for a 5x5 board
 
 
+//localStorage for scores
 if(!localStorage.getItem('timmyHighestStreak')) {
     localStorage.setItem('timmyHighestStreak', 0);
 }
@@ -56,6 +57,7 @@ function replayGame() {
     //It is just a F5
     location.reload()
 }
+
 
 //GENERATING ENVIRONMENT FUNCTIONS
 //=======================================================================
@@ -333,7 +335,8 @@ function onClick(event) {
             alert('You lost !')
             replayGame()
         }
-        //else is the case where there is no obstacle but the case is not reachable
+
+        //There is also a case where neither an obstacle nor a valid position is clicked : a non-reachable cell. There is no condition in the code for that case since no beahviour is expected
     }
     
 }
